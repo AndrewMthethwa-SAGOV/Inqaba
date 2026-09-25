@@ -1,0 +1,11 @@
+# Ignore database binary storage
+database/pgdata/
+
+# Ignore security keys, certificates, and passwords
+*.env
+*.key
+*.pem
+*.secret
+
+# Ignore system log files
+logs/*.log
