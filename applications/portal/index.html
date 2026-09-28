@@ -42,19 +42,23 @@
       border-radius: 4px;
     }
     .brand-title { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-    .env-badge {
-      font-size: 0.75rem;
-      text-transform: uppercase;
+    .header-actions { display: flex; align-items: center; gap: 1rem; }
+    .btn-register {
+      background: var(--gold-500);
+      color: var(--navy-900);
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      letter-spacing: 0.08em;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 0.35rem 0.8rem;
       border-radius: 4px;
-      color: #E2E8F0;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: opacity 0.15s ease;
     }
+    .btn-register:hover { opacity: 0.9; }
 
-    main { max-width: 1350px; margin: 2rem auto; padding: 0 1.5rem; }
+    main { max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem; }
 
     .metrics-row {
       display: grid;
@@ -98,12 +102,68 @@
     .panel-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .panel-tag { font-size: 0.75rem; background: rgba(197, 155, 39, 0.2); color: var(--gold-500); border: 1px solid var(--gold-500); padding: 0.2rem 0.5rem; border-radius: 3px; }
 
-    #inqaba-map { height: 520px; width: 100%; background: #E2E8F0; }
+    #inqaba-map { height: 560px; width: 100%; background: #E2E8F0; }
 
-    .project-table-container { padding: 1rem; max-height: 520px; overflow-y: auto; }
+    .project-table-container { padding: 1rem; max-height: 560px; overflow-y: auto; }
     .project-list-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
     .project-list-table th { text-align: left; padding: 0.6rem 0.75rem; background: var(--slate-100); color: var(--slate-700); font-weight: 700; border-bottom: 1px solid var(--slate-200); }
     .project-list-table td { padding: 0.75rem; border-bottom: 1px solid var(--slate-200); vertical-align: top; }
+
+    /* Modal Form Styling */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 17, 40, 0.75);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .modal-window {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 540px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal-header {
+      background: var(--navy-900);
+      color: #FFFFFF;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--gold-500);
+    }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; text-transform: uppercase; }
+    .modal-close { background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer; }
+    .modal-form { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-group label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--slate-700); }
+    .form-group input, .form-group select {
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--slate-200);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: var(--slate-900);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-submit-btn {
+      margin-top: 0.5rem;
+      background: var(--navy-900);
+      color: #FFFFFF;
+      border: 1px solid var(--gold-500);
+      padding: 0.8rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-submit-btn:hover { background: var(--navy-800); }
   </style>
 </head>
 <body>
@@ -113,7 +173,9 @@
       <div class="brand-mark">IY</div>
       <div class="brand-title">Inqaba Yesizwe Investments</div>
     </div>
-    <div class="env-badge">Live Institutional Pipeline</div>
+    <div class="header-actions">
+      <button class="btn-register" onclick="openModal()">+ Register Project</button>
+    </div>
   </header>
 
   <main>
@@ -134,9 +196,9 @@
         <div class="metric-sub">n8n &harr; PostGIS Dynamic Feed</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">GIS Pipeline</div>
+        <div class="metric-label">Spatial Precision</div>
         <div class="metric-value">SRID 4326</div>
-        <div class="metric-sub">WGS 84 Coordinates</div>
+        <div class="metric-sub">WGS 84 Real-time Geocoding</div>
       </div>
     </section>
 
@@ -164,7 +226,7 @@
               </tr>
             </thead>
             <tbody id="project-table-body">
-              <tr><td colspan="3" style="text-align:center; color:#64748B;">Fetching live data from n8n...</td></tr>
+              <tr><td colspan="3" style="text-align:center; color:#64748B;">Fetching live data...</td></tr>
             </tbody>
           </table>
         </div>
@@ -172,8 +234,72 @@
     </div>
   </main>
 
+  <!-- Project Registration Modal -->
+  <div class="modal-overlay" id="intake-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3>Register Infrastructure Asset</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <form class="modal-form" id="project-form" onsubmit="handleFormSubmit(event)">
+        <div class="form-group">
+          <label>Project Name</label>
+          <input type="text" id="form-name" required placeholder="e.g. Mangaung Logistics Terminal">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Project ID</label>
+            <input type="text" id="form-id" required placeholder="INQ-FS-2026-005">
+          </div>
+          <div class="form-group">
+            <label>Province</label>
+            <select id="form-province" required>
+              <option value="Free State">Free State</option>
+              <option value="Gauteng">Gauteng</option>
+              <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+              <option value="Western Cape">Western Cape</option>
+              <option value="Eastern Cape">Eastern Cape</option>
+              <option value="Mpumalanga">Mpumalanga</option>
+              <option value="Limpopo">Limpopo</option>
+              <option value="North West">North West</option>
+              <option value="Northern Cape">Northern Cape</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sector</label>
+            <select id="form-sector" required>
+              <option value="Logistics & Transport">Logistics & Transport</option>
+              <option value="Energy & Utilities">Energy & Utilities</option>
+              <option value="Agriculture & Agro-processing">Agriculture & Agro-processing</option>
+              <option value="Water Infrastructure">Water Infrastructure</option>
+              <option value="Digital Telecommunications">Digital Telecommunications</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Capital Budget (ZAR)</label>
+            <input type="number" id="form-budget" required placeholder="45000000" step="10000">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Longitude (East)</label>
+            <input type="number" id="form-lon" required placeholder="26.2167" step="any">
+          </div>
+          <div class="form-group">
+            <label>Latitude (South)</label>
+            <input type="number" id="form-lat" required placeholder="-29.1167" step="any">
+          </div>
+        </div>
+        <button type="submit" class="form-submit-btn" id="btn-submit">Commit to Sovereign Vault</button>
+      </form>
+    </div>
+  </div>
+
   <script>
     const map = L.map('inqaba-map').setView([-28.8, 24.5], 5.8);
+    const markerLayer = L.layerGroup().addTo(map);
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -185,6 +311,7 @@
         const response = await fetch('http://localhost:5678/webhook/projects');
         const projects = await response.json();
 
+        markerLayer.clearLayers();
         let totalZAR = 0;
         const provinces = new Set();
         const tableBody = document.getElementById('project-table-body');
@@ -195,8 +322,7 @@
           totalZAR += budget;
           provinces.add(p.province);
 
-          // Add dynamic map marker
-          const marker = L.marker([parseFloat(p.latitude), parseFloat(p.longitude)]).addTo(map);
+          const marker = L.marker([parseFloat(p.latitude), parseFloat(p.longitude)]).addTo(markerLayer);
           marker.bindPopup(`
             <strong style="color:#0A1128;">${p.project_name}</strong><br>
             <b>ID:</b> ${p.project_id}<br>
@@ -205,7 +331,6 @@
             <b>Budget:</b> R ${budget.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}
           `);
 
-          // Append to sidebar table
           const row = document.createElement('tr');
           row.innerHTML = `
             <td><b>${p.project_name}</b><br><small style="color:#64748B;">${p.project_id}</small></td>
@@ -215,15 +340,54 @@
           tableBody.appendChild(row);
         });
 
-        // Update top KPI cards
         document.getElementById('total-capital').innerText = 'R ' + (totalZAR / 1000000).toFixed(1) + 'M';
         document.getElementById('project-count').innerText = `${projects.length} Active Infrastructure Projects`;
         document.getElementById('corridor-count').innerText = `${provinces.size} Provinces`;
 
       } catch (err) {
         console.error('Error fetching live data:', err);
-        document.getElementById('total-capital').innerText = 'Offline';
-        document.getElementById('project-count').innerText = 'Check n8n INQABA-02 workflow';
+      }
+    }
+
+    function openModal() {
+      document.getElementById('intake-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('intake-modal').style.display = 'none';
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById('btn-submit');
+      submitBtn.innerText = 'Transmitting to n8n...';
+      submitBtn.disabled = true;
+
+      const payload = {
+        project_id: document.getElementById('form-id').value,
+        project_name: document.getElementById('form-name').value,
+        sector: document.getElementById('form-sector').value,
+        province: document.getElementById('form-province').value,
+        budget_zar: parseFloat(document.getElementById('form-budget').value),
+        longitude: parseFloat(document.getElementById('form-lon').value),
+        latitude: parseFloat(document.getElementById('form-lat').value)
+      };
+
+      try {
+        await fetch('http://localhost:5678/webhook/project-intake', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        closeModal();
+        document.getElementById('project-form').reset();
+        await loadLiveProjects();
+      } catch (err) {
+        alert('Error transmitting to n8n webhook: ' + err.message);
+      } finally {
+        submitBtn.innerText = 'Commit to Sovereign Vault';
+        submitBtn.disabled = false;
       }
     }
 
