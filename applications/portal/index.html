@@ -10,14 +10,20 @@
 
   <style>
     :root {
+      --navy-950: #070B19;
       --navy-900: #0A1128;
       --navy-800: #101F42;
       --gold-500: #C59B27;
+      --gold-600: #9E7B1D;
       --slate-100: #F1F5F9;
       --slate-200: #E2E8F0;
+      --slate-300: #CBD5E1;
+      --slate-600: #475569;
       --slate-700: #334155;
       --slate-900: #0F172A;
       --emerald-600: #059669;
+      --blue-600: #2563EB;
+      --amber-600: #D97706;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -47,18 +53,17 @@
       background: var(--gold-500);
       color: var(--navy-900);
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.55rem 1.1rem;
       font-size: 0.85rem;
       font-weight: 700;
       border-radius: 4px;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      transition: opacity 0.15s ease;
     }
     .btn-register:hover { opacity: 0.9; }
 
-    main { max-width: 1400px; margin: 2rem auto; padding: 0 1.5rem; }
+    main { max-width: 1440px; margin: 2rem auto; padding: 0 1.5rem; }
 
     .metrics-row {
       display: grid;
@@ -73,16 +78,16 @@
       padding: 1.25rem 1.5rem;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
-    .metric-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--slate-700); font-weight: 600; margin-bottom: 0.4rem; }
+    .metric-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--slate-600); font-weight: 700; margin-bottom: 0.35rem; }
     .metric-value { font-size: 1.75rem; font-weight: 800; color: var(--navy-900); }
     .metric-sub { font-size: 0.8rem; color: var(--emerald-600); font-weight: 600; margin-top: 0.25rem; }
 
     .grid-layout {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1.6fr 1.4fr;
       gap: 1.75rem;
     }
-    @media (max-width: 960px) { .grid-layout { grid-template-columns: 1fr; } }
+    @media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
 
     .panel {
       background: #FFFFFF;
@@ -99,15 +104,52 @@
       justify-content: space-between;
       align-items: center;
     }
-    .panel-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .panel-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .panel-tag { font-size: 0.75rem; background: rgba(197, 155, 39, 0.2); color: var(--gold-500); border: 1px solid var(--gold-500); padding: 0.2rem 0.5rem; border-radius: 3px; }
 
-    #inqaba-map { height: 560px; width: 100%; background: #E2E8F0; }
+    #inqaba-map { height: 600px; width: 100%; background: #E2E8F0; }
 
-    .project-table-container { padding: 1rem; max-height: 560px; overflow-y: auto; }
-    .project-list-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .project-list-table th { text-align: left; padding: 0.6rem 0.75rem; background: var(--slate-100); color: var(--slate-700); font-weight: 700; border-bottom: 1px solid var(--slate-200); }
-    .project-list-table td { padding: 0.75rem; border-bottom: 1px solid var(--slate-200); vertical-align: top; }
+    .project-table-container { padding: 0; max-height: 600px; overflow-y: auto; }
+    .project-list-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .project-list-table th { text-align: left; padding: 0.75rem 1rem; background: var(--slate-100); color: var(--slate-700); font-weight: 700; border-bottom: 2px solid var(--slate-200); position: sticky; top: 0; z-index: 5; }
+    .project-list-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--slate-200); vertical-align: middle; }
+
+    .badge-status {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .status-active { background: #DEF7EC; color: #03543F; }
+    .status-adjudication { background: #FEF3C7; color: #92400E; }
+    .status-feasibility { background: #E0E7FF; color: #3730A3; }
+
+    .vote-pill {
+      font-family: monospace;
+      font-size: 0.75rem;
+      background: var(--slate-100);
+      padding: 0.15rem 0.4rem;
+      border: 1px solid var(--slate-300);
+      border-radius: 3px;
+      color: var(--slate-700);
+    }
+
+    .progress-bar-bg {
+      background: var(--slate-200);
+      border-radius: 3px;
+      height: 6px;
+      width: 100%;
+      margin-top: 0.35rem;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      background: var(--emerald-600);
+      height: 100%;
+      border-radius: 3px;
+    }
 
     /* Modal Form Styling */
     .modal-overlay {
@@ -123,10 +165,10 @@
     .modal-window {
       background: #FFFFFF;
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
     .modal-header {
       background: var(--navy-900);
@@ -139,17 +181,16 @@
     }
     .modal-header h3 { font-size: 1rem; font-weight: 700; text-transform: uppercase; }
     .modal-close { background: none; border: none; color: #FFFFFF; font-size: 1.5rem; cursor: pointer; }
-    .modal-form { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.35rem; }
-    .form-group label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--slate-700); }
+    .modal-form { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--slate-700); }
     .form-group input, .form-group select {
-      padding: 0.65rem 0.75rem;
+      padding: 0.6rem 0.75rem;
       border: 1px solid var(--slate-200);
       border-radius: 4px;
-      font-size: 0.9rem;
-      color: var(--slate-900);
+      font-size: 0.88rem;
     }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
     .form-submit-btn {
       margin-top: 0.5rem;
       background: var(--navy-900);
@@ -163,7 +204,6 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-    .form-submit-btn:hover { background: var(--navy-800); }
   </style>
 </head>
 <body>
@@ -181,24 +221,24 @@
   <main>
     <section class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Total Capital Allocated</div>
-        <div class="metric-value" id="total-capital">Loading...</div>
-        <div class="metric-sub" id="project-count">Synchronizing PostGIS...</div>
+        <div class="metric-label">Allocated Capital</div>
+        <div class="metric-value" id="total-allocated">R 0.0M</div>
+        <div class="metric-sub" id="project-count">Synchronizing...</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Disbursed Capital (Treasury)</div>
+        <div class="metric-value" id="total-disbursed">R 0.0M</div>
+        <div class="metric-sub" id="disbursement-overall-pct">0% Deployed</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Active Corridors</div>
-        <div class="metric-value" id="corridor-count">-</div>
+        <div class="metric-value" id="corridor-count">0</div>
         <div class="metric-sub">Sovereign Provinces</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Data Architecture</div>
-        <div class="metric-value">Live API</div>
-        <div class="metric-sub">n8n &harr; PostGIS Dynamic Feed</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Spatial Precision</div>
-        <div class="metric-value">SRID 4326</div>
-        <div class="metric-sub">WGS 84 Real-time Geocoding</div>
+        <div class="metric-label">Financial Governance</div>
+        <div class="metric-value">SCOA / BAS</div>
+        <div class="metric-sub">Vote-Allocated Ledger Active</div>
       </div>
     </section>
 
@@ -213,20 +253,20 @@
 
       <section class="panel">
         <div class="panel-header">
-          <span class="panel-title">Project Registry</span>
-          <span class="panel-tag">Live Feed</span>
+          <span class="panel-title">Institutional Financial Ledger</span>
+          <span class="panel-tag">Treasury Status</span>
         </div>
         <div class="project-table-container">
           <table class="project-list-table">
             <thead>
               <tr>
-                <th>Project</th>
-                <th>Province</th>
-                <th>Budget (ZAR)</th>
+                <th>Project & Code</th>
+                <th>Vote & Status</th>
+                <th>Financial Execution</th>
               </tr>
             </thead>
             <tbody id="project-table-body">
-              <tr><td colspan="3" style="text-align:center; color:#64748B;">Fetching live data...</td></tr>
+              <tr><td colspan="3" style="text-align:center; padding: 2rem; color:#64748B;">Synchronizing PostGIS vault...</td></tr>
             </tbody>
           </table>
         </div>
@@ -234,7 +274,7 @@
     </div>
   </main>
 
-  <!-- Project Registration Modal -->
+  <!-- Registration Modal -->
   <div class="modal-overlay" id="intake-modal">
     <div class="modal-window">
       <div class="modal-header">
@@ -244,20 +284,20 @@
       <form class="modal-form" id="project-form" onsubmit="handleFormSubmit(event)">
         <div class="form-group">
           <label>Project Name</label>
-          <input type="text" id="form-name" required placeholder="e.g. Mangaung Logistics Terminal">
+          <input type="text" id="form-name" required placeholder="e.g. Saldanha Mineral Berth">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Project ID</label>
-            <input type="text" id="form-id" required placeholder="INQ-FS-2026-005">
+            <input type="text" id="form-id" required placeholder="INQ-WC-2026-006">
           </div>
           <div class="form-group">
             <label>Province</label>
             <select id="form-province" required>
+              <option value="Western Cape">Western Cape</option>
               <option value="Free State">Free State</option>
               <option value="Gauteng">Gauteng</option>
               <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-              <option value="Western Cape">Western Cape</option>
               <option value="Eastern Cape">Eastern Cape</option>
               <option value="Mpumalanga">Mpumalanga</option>
               <option value="Limpopo">Limpopo</option>
@@ -279,17 +319,17 @@
           </div>
           <div class="form-group">
             <label>Capital Budget (ZAR)</label>
-            <input type="number" id="form-budget" required placeholder="45000000" step="10000">
+            <input type="number" id="form-budget" required placeholder="50000000" step="10000">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Longitude (East)</label>
-            <input type="number" id="form-lon" required placeholder="26.2167" step="any">
+            <input type="number" id="form-lon" required placeholder="17.9442" step="any">
           </div>
           <div class="form-group">
             <label>Latitude (South)</label>
-            <input type="number" id="form-lat" required placeholder="-29.1167" step="any">
+            <input type="number" id="form-lat" required placeholder="-33.0153" step="any">
           </div>
         </div>
         <button type="submit" class="form-submit-btn" id="btn-submit">Commit to Sovereign Vault</button>
@@ -306,42 +346,86 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
+    function getBadgeClass(status) {
+      if (!status) return 'status-active';
+      if (status.includes('Adjudication')) return 'status-adjudication';
+      if (status.includes('Feasibility')) return 'status-feasibility';
+      return 'status-active';
+    }
+
     async function loadLiveProjects() {
       try {
         const response = await fetch('http://localhost:5678/webhook/projects');
-        const projects = await response.json();
+        const rawData = await response.json();
+
+        // Defensive normalization: guarantee projectList is an Array
+        let projectList = [];
+        if (Array.isArray(rawData)) {
+          projectList = rawData;
+        } else if (rawData && Array.isArray(rawData.data)) {
+          projectList = rawData.data;
+        } else if (rawData && typeof rawData === 'object') {
+          // Wrap single object or extract items if present
+          projectList = rawData.project_id ? [rawData] : Object.values(rawData);
+        }
 
         markerLayer.clearLayers();
-        let totalZAR = 0;
+        let totalAllocated = 0;
+        let totalDisbursed = 0;
         const provinces = new Set();
         const tableBody = document.getElementById('project-table-body');
         tableBody.innerHTML = '';
 
-        projects.forEach(p => {
+        projectList.forEach(p => {
+          if (!p || !p.project_id) return;
           const budget = parseFloat(p.budget_zar) || 0;
-          totalZAR += budget;
+          const disbursed = parseFloat(p.disbursed_zar) || 0;
+          const pct = parseFloat(p.disbursement_pct) || (budget > 0 ? ((disbursed / budget) * 100).toFixed(1) : 0);
+          totalAllocated += budget;
+          totalDisbursed += disbursed;
           provinces.add(p.province);
 
-          const marker = L.marker([parseFloat(p.latitude), parseFloat(p.longitude)]).addTo(markerLayer);
-          marker.bindPopup(`
-            <strong style="color:#0A1128;">${p.project_name}</strong><br>
-            <b>ID:</b> ${p.project_id}<br>
-            <b>Sector:</b> ${p.sector}<br>
-            <b>Province:</b> ${p.province}<br>
-            <b>Budget:</b> R ${budget.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}
-          `);
+          const lat = parseFloat(p.latitude);
+          const lon = parseFloat(p.longitude);
+          if (!isNaN(lat) && !isNaN(lon)) {
+            const marker = L.marker([lat, lon]).addTo(markerLayer);
+            marker.bindPopup(`
+              <strong style="color:#0A1128;">${p.project_name}</strong><br>
+              <b>ID:</b> ${p.project_id} | <span class="vote-pill">${p.treasury_vote || 'VOTE-14'}</span><br>
+              <b>Status:</b> ${p.procurement_status || 'Active'}<br>
+              <b>Sector:</b> ${p.sector}<br>
+              <b>Budget:</b> R ${budget.toLocaleString('en-ZA')}<br>
+              <b>Disbursed:</b> R ${disbursed.toLocaleString('en-ZA')} (${pct}%)
+            `);
+          }
 
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td><b>${p.project_name}</b><br><small style="color:#64748B;">${p.project_id}</small></td>
-            <td>${p.province}</td>
-            <td>R ${budget.toLocaleString('en-ZA', { minimumFractionDigits: 0 })}</td>
+            <td>
+              <div style="font-weight:700; color:var(--navy-900);">${p.project_name}</div>
+              <small style="color:var(--slate-600);">${p.project_id} &bull; ${p.province}</small>
+            </td>
+            <td>
+              <span class="vote-pill">${p.treasury_vote || 'VOTE-14'}</span>
+              <div style="margin-top:0.25rem;"><span class="badge-status ${getBadgeClass(p.procurement_status)}">${p.procurement_status || 'Active'}</span></div>
+            </td>
+            <td>
+              <div style="font-weight:700; color:var(--navy-900);">R ${(disbursed / 1000000).toFixed(1)}M <span style="font-weight:400; color:var(--slate-600); font-size:0.75rem;">/ R ${(budget / 1000000).toFixed(1)}M</span></div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" style="width: ${Math.min(pct, 100)}%;"></div>
+              </div>
+              <div style="font-size:0.7rem; color:var(--emerald-600); font-weight:600; margin-top:0.15rem;">${pct}% executed</div>
+            </td>
           `;
           tableBody.appendChild(row);
         });
 
-        document.getElementById('total-capital').innerText = 'R ' + (totalZAR / 1000000).toFixed(1) + 'M';
-        document.getElementById('project-count').innerText = `${projects.length} Active Infrastructure Projects`;
+        // Update Top KPIs
+        document.getElementById('total-allocated').innerText = 'R ' + (totalAllocated / 1000000).toFixed(1) + 'M';
+        document.getElementById('total-disbursed').innerText = 'R ' + (totalDisbursed / 1000000).toFixed(1) + 'M';
+        const overallPct = totalAllocated > 0 ? ((totalDisbursed / totalAllocated) * 100).toFixed(1) : 0;
+        document.getElementById('disbursement-overall-pct').innerText = `${overallPct}% Total Execution`;
+        document.getElementById('project-count').innerText = `${projectList.length} Registered Infrastructure Assets`;
         document.getElementById('corridor-count').innerText = `${provinces.size} Provinces`;
 
       } catch (err) {
@@ -349,18 +433,13 @@
       }
     }
 
-    function openModal() {
-      document.getElementById('intake-modal').style.display = 'flex';
-    }
-
-    function closeModal() {
-      document.getElementById('intake-modal').style.display = 'none';
-    }
+    function openModal() { document.getElementById('intake-modal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('intake-modal').style.display = 'none'; }
 
     async function handleFormSubmit(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('btn-submit');
-      submitBtn.innerText = 'Transmitting to n8n...';
+      submitBtn.innerText = 'Transmitting...';
       submitBtn.disabled = true;
 
       const payload = {
@@ -379,12 +458,11 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-
         closeModal();
         document.getElementById('project-form').reset();
         await loadLiveProjects();
       } catch (err) {
-        alert('Error transmitting to n8n webhook: ' + err.message);
+        alert('Error transmitting to webhook: ' + err.message);
       } finally {
         submitBtn.innerText = 'Commit to Sovereign Vault';
         submitBtn.disabled = false;
