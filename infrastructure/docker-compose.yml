@@ -1,0 +1,39 @@
+services:
+  inqaba-postgres:
+    image: postgis/postgis:16-3.4
+    container_name: inqaba-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inqaba_yesizwe
+      POSTGRES_USER: inqaba_admin
+      POSTGRES_PASSWORD: InqabaLocal2026#
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/andrew/inqaba/database/pgdata:/var/lib/postgresql/data
+
+  inqaba-n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: inqaba-n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - GENERIC_TIMEZONE=Africa/Johannesburg
+      - TZ=Africa/Johannesburg
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+    volumes:
+      - /home/andrew/inqaba/n8n/data:/home/node/.n8n
+
+  inqaba-web:
+    image: nginx:alpine
+    container_name: inqaba-web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - /home/andrew/inqaba/applications/portal:/usr/share/nginx/html:ro
+
+networks:
+  default:
+    name: inqaba-network
