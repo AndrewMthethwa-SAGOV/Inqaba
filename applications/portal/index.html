@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inqaba Yesizwe | Sovereign Capital & Spatial Intelligence</title>
   
-  <!-- Leaflet GIS Map Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -14,8 +13,6 @@
       --navy-900: #0A1128;
       --navy-800: #101F42;
       --gold-500: #C59B27;
-      --gold-600: #9E7B1D;
-      --slate-50: #F8FAFC;
       --slate-100: #F1F5F9;
       --slate-200: #E2E8F0;
       --slate-700: #334155;
@@ -23,7 +20,7 @@
       --emerald-600: #059669;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--slate-100); color: var(--slate-900); line-height: 1.5; }
 
     header {
@@ -43,7 +40,6 @@
       font-size: 1.1rem;
       padding: 0.4rem 0.75rem;
       border-radius: 4px;
-      letter-spacing: 0.05em;
     }
     .brand-title { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
     .env-badge {
@@ -102,33 +98,12 @@
     .panel-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .panel-tag { font-size: 0.75rem; background: rgba(197, 155, 39, 0.2); color: var(--gold-500); border: 1px solid var(--gold-500); padding: 0.2rem 0.5rem; border-radius: 3px; }
 
-    #inqaba-map { height: 500px; width: 100%; background: #E2E8F0; }
+    #inqaba-map { height: 520px; width: 100%; background: #E2E8F0; }
 
-    .service-list { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.25rem; }
-    .service-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.9rem 1rem;
-      border: 1px solid var(--slate-200);
-      border-radius: 6px;
-      background: var(--slate-50);
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-    .service-item:hover { border-color: var(--gold-500); background: #FFFFFF; }
-    .service-name { font-weight: 700; font-size: 0.9rem; color: var(--navy-900); }
-    .service-desc { font-size: 0.75rem; color: var(--slate-700); margin-top: 0.15rem; }
-    .status-dot {
-      display: inline-block;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--emerald-600);
-      margin-right: 0.35rem;
-    }
-    .status-text { font-size: 0.75rem; font-weight: 700; color: var(--emerald-600); }
+    .project-table-container { padding: 1rem; max-height: 520px; overflow-y: auto; }
+    .project-list-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .project-list-table th { text-align: left; padding: 0.6rem 0.75rem; background: var(--slate-100); color: var(--slate-700); font-weight: 700; border-bottom: 1px solid var(--slate-200); }
+    .project-list-table td { padding: 0.75rem; border-bottom: 1px solid var(--slate-200); vertical-align: top; }
   </style>
 </head>
 <body>
@@ -138,114 +113,121 @@
       <div class="brand-mark">IY</div>
       <div class="brand-title">Inqaba Yesizwe Investments</div>
     </div>
-    <div class="env-badge">Institutional Architecture | Local Node</div>
+    <div class="env-badge">Live Institutional Pipeline</div>
   </header>
 
   <main>
     <section class="metrics-row">
       <div class="metric-card">
-        <div class="metric-label">Allocated Capital</div>
-        <div class="metric-value">R 43,500,000</div>
-        <div class="metric-sub">Active Infrastructure Pipeline</div>
+        <div class="metric-label">Total Capital Allocated</div>
+        <div class="metric-value" id="total-capital">Loading...</div>
+        <div class="metric-sub" id="project-count">Synchronizing PostGIS...</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Provincial Corridors</div>
-        <div class="metric-value">2 Active</div>
-        <div class="metric-sub">Mpumalanga & Eastern Cape</div>
+        <div class="metric-label">Active Corridors</div>
+        <div class="metric-value" id="corridor-count">-</div>
+        <div class="metric-sub">Sovereign Provinces</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Core Data Engine</div>
-        <div class="metric-value">PostGIS 3.4</div>
-        <div class="metric-sub">SRID 4326 (WGS 84 Enabled)</div>
+        <div class="metric-label">Data Architecture</div>
+        <div class="metric-value">Live API</div>
+        <div class="metric-sub">n8n &harr; PostGIS Dynamic Feed</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Workflow Automation</div>
-        <div class="metric-value">n8n Active</div>
-        <div class="metric-sub">Internal Port 5678 Connected</div>
+        <div class="metric-label">GIS Pipeline</div>
+        <div class="metric-value">SRID 4326</div>
+        <div class="metric-sub">WGS 84 Coordinates</div>
       </div>
     </section>
 
     <div class="grid-layout">
       <section class="panel">
         <div class="panel-header">
-          <span class="panel-title">Infrastructure Footprint (PostGIS Seed View)</span>
-          <span class="panel-tag">Live Spatial Plot</span>
+          <span class="panel-title">Infrastructure Footprint</span>
+          <span class="panel-tag">Live Spatial Sync</span>
         </div>
         <div id="inqaba-map"></div>
       </section>
 
       <section class="panel">
         <div class="panel-header">
-          <span class="panel-title">Institutional Services</span>
-          <span class="panel-tag">Local Stack</span>
+          <span class="panel-title">Project Registry</span>
+          <span class="panel-tag">Live Feed</span>
         </div>
-        <div class="service-list">
-          <a class="service-item" href="http://localhost:5678" target="_blank">
-            <div>
-              <div class="service-name">n8n Automation Engine</div>
-              <div class="service-desc">Workflow triggers, document pipelines & APIs</div>
-            </div>
-            <div>
-              <span class="status-dot"></span>
-              <span class="status-text">Online</span>
-            </div>
-          </a>
-
-          <div class="service-item">
-            <div>
-              <div class="service-name">PostGIS Database Vault</div>
-              <div class="service-desc">inqaba_yesizwe (Port 5432)</div>
-            </div>
-            <div>
-              <span class="status-dot"></span>
-              <span class="status-text">Ready</span>
-            </div>
-          </div>
-
-          <div class="service-item">
-            <div>
-              <div class="service-name">QGIS Spatial Workstation</div>
-              <div class="service-desc">Desktop GIS application linked to vault</div>
-            </div>
-            <div>
-              <span class="status-dot"></span>
-              <span class="status-text">Ready</span>
-            </div>
-          </div>
+        <div class="project-table-container">
+          <table class="project-list-table">
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Province</th>
+                <th>Budget (ZAR)</th>
+              </tr>
+            </thead>
+            <tbody id="project-table-body">
+              <tr><td colspan="3" style="text-align:center; color:#64748B;">Fetching live data from n8n...</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
     </div>
   </main>
 
   <script>
-    // Center map on South Africa
-    const map = L.map('inqaba-map').setView([-28.8, 26.5], 6);
+    const map = L.map('inqaba-map').setView([-28.8, 24.5], 5.8);
 
-    // Official OpenStreetMap tile layer (100% free, no API key required)
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Project 1: Ehlanzeni Agri-Processing Hub (Mpumalanga)
-    const p1 = L.marker([-25.4753, 30.9694]).addTo(map);
-    p1.bindPopup(`
-      <strong style="color:#0A1128;">Ehlanzeni Agri-Processing Hub</strong><br>
-      <b>Project ID:</b> INQ-MP-2026-001<br>
-      <b>Province:</b> Mpumalanga<br>
-      <b>Sector:</b> Agriculture<br>
-      <b>Capital Budget:</b> R 25,000,000
-    `);
+    async function loadLiveProjects() {
+      try {
+        const response = await fetch('http://localhost:5678/webhook/projects');
+        const projects = await response.json();
 
-    // Project 2: Great Kei Rural Water Corridor (Eastern Cape)
-    const p2 = L.marker([-32.5292, 28.1033]).addTo(map);
-    p2.bindPopup(`
-      <strong style="color:#0A1128;">Great Kei Rural Water Corridor</strong><br>
-      <b>Project ID:</b> INQ-EC-2026-002<br>
-      <b>Province:</b> Eastern Cape<br>
-      <b>Sector:</b> Water & Sanitation<br>
-      <b>Capital Budget:</b> R 18,500,000
-    `);
+        let totalZAR = 0;
+        const provinces = new Set();
+        const tableBody = document.getElementById('project-table-body');
+        tableBody.innerHTML = '';
+
+        projects.forEach(p => {
+          const budget = parseFloat(p.budget_zar) || 0;
+          totalZAR += budget;
+          provinces.add(p.province);
+
+          // Add dynamic map marker
+          const marker = L.marker([parseFloat(p.latitude), parseFloat(p.longitude)]).addTo(map);
+          marker.bindPopup(`
+            <strong style="color:#0A1128;">${p.project_name}</strong><br>
+            <b>ID:</b> ${p.project_id}<br>
+            <b>Sector:</b> ${p.sector}<br>
+            <b>Province:</b> ${p.province}<br>
+            <b>Budget:</b> R ${budget.toLocaleString('en-ZA', { minimumFractionDigits: 2 })}
+          `);
+
+          // Append to sidebar table
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><b>${p.project_name}</b><br><small style="color:#64748B;">${p.project_id}</small></td>
+            <td>${p.province}</td>
+            <td>R ${budget.toLocaleString('en-ZA', { minimumFractionDigits: 0 })}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+
+        // Update top KPI cards
+        document.getElementById('total-capital').innerText = 'R ' + (totalZAR / 1000000).toFixed(1) + 'M';
+        document.getElementById('project-count').innerText = `${projects.length} Active Infrastructure Projects`;
+        document.getElementById('corridor-count').innerText = `${provinces.size} Provinces`;
+
+      } catch (err) {
+        console.error('Error fetching live data:', err);
+        document.getElementById('total-capital').innerText = 'Offline';
+        document.getElementById('project-count').innerText = 'Check n8n INQABA-02 workflow';
+      }
+    }
+
+    loadLiveProjects();
   </script>
 </body>
 </html>
