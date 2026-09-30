@@ -31,7 +31,7 @@
   </header>
 
   <!-- Environment Navigation Bar -->
-  <nav class="bg-white border-b border-inqaba-border px-6 py-2 flex items-center space-x-2 text-sm font-interface overflow-x-auto shadow-sm">
+  <nav class="bg-white border-b border-slate-200/80 px-6 py-2 flex items-center space-x-2 text-sm font-interface overflow-x-auto scrollbar-thin shadow-sm">
     <button class="px-4 py-2 rounded-md font-semibold text-inqaba-navy border-b-2 border-inqaba-navy bg-slate-50">
       1. ATLAS Operations
     </button>
@@ -54,7 +54,7 @@
 
     <!-- Executive Metric Cards -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-      <div class="bg-white p-5 rounded-lg border border-inqaba-border shadow-sm">
+      <div class="iq-glass-light p-5 rounded-lg border border-slate-200/80 shadow-xs">
         <p class="text-xs uppercase tracking-wider text-slate-500 font-interface">Total Capital Portfolio</p>
         <p class="text-2xl font-bold font-mono text-inqaba-navy mt-1">R 1,750,000,000</p>
         <div class="mt-2 flex items-center text-xs text-slate-500">
@@ -62,7 +62,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-lg border border-inqaba-border shadow-sm">
+      <div class="iq-glass-light p-5 rounded-lg border border-slate-200/80 shadow-xs">
         <p class="text-xs uppercase tracking-wider text-slate-500 font-interface">Certified Disbursements</p>
         <p class="text-2xl font-bold font-mono text-slate-800 mt-1">R 434,500,000</p>
         <div class="mt-2 flex items-center text-xs text-slate-500">
@@ -70,7 +70,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-lg border border-inqaba-border shadow-sm">
+      <div class="iq-glass-light p-5 rounded-lg border border-slate-200/80 shadow-xs">
         <p class="text-xs uppercase tracking-wider text-slate-500 font-interface">PFMA Treasury Votes</p>
         <p class="text-2xl font-bold font-mono text-inqaba-navy mt-1">4 Enforced</p>
         <div class="mt-2 text-xs text-slate-500">
@@ -88,21 +88,21 @@
     </div>
 
     <!-- Active Capital Ledger Component -->
-    <div class="bg-white rounded-lg border border-inqaba-border shadow-sm overflow-hidden">
-      <div class="px-6 py-4 border-b border-inqaba-border flex justify-between items-center bg-slate-50/50">
+    <div class="iq-glass-light rounded-lg border border-slate-200/80 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200/80 flex justify-between items-center bg-slate-50/50">
         <div>
           <h2 class="font-editorial text-base font-bold text-inqaba-navy">National Infrastructure Project Register</h2>
           <p class="text-xs text-slate-500 font-interface">Direct rendering of mock dataset (projects.json)</p>
         </div>
-        <span class="text-xs font-mono bg-white border border-inqaba-border px-3 py-1 rounded text-slate-600">
+        <span class="text-xs font-mono bg-white border border-slate-200/80 px-3 py-1 rounded text-slate-600">
           EPSG:4326 Sovereign Reference
         </span>
       </div>
 
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto scrollbar-thin">
         <table class="w-full text-left border-collapse text-sm">
           <thead>
-            <tr class="bg-slate-100/75 border-b border-inqaba-border text-xs uppercase tracking-wider text-slate-600 font-interface">
+            <tr class="bg-slate-100/75 border-b border-slate-200/80 text-xs uppercase tracking-wider text-slate-600 font-interface">
               <th class="py-3 px-4">Identifier</th>
               <th class="py-3 px-4">Project Scope</th>
               <th class="py-3 px-4">Province & Jurisdiction</th>
@@ -126,33 +126,36 @@
     fetch('./mock-data/projects.json')
       .then(res => res.json())
       .then(data => {
-        const tbody = document.getElementById('projects-table-body');
-        tbody.innerHTML = data.map(p => `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="py-3 px-4 font-mono font-semibold text-slate-900">${p.project_id}</td>
-            <td class="py-3 px-4">
-              <div class="font-medium text-slate-900">${p.project_name}</div>
-              <div class="text-[11px] text-slate-500">${p.sector} • ${p.contractor}</div>
-            </td>
-            <td class="py-3 px-4">
-              <span class="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
-                ${p.province}
-              </span>
-            </td>
-            <td class="py-3 px-4 font-mono font-medium">${p.treasury_vote}</td>
-            <td class="py-3 px-4 font-mono text-right font-medium">R ${p.budget_zar.toLocaleString('en-ZA')}</td>
-            <td class="py-3 px-4 font-mono text-right text-slate-600">R ${p.disbursed_zar.toLocaleString('en-ZA')}</td>
-            <td class="py-3 px-4 text-center">
-              <span class="inline-flex px-2 py-0.5 rounded text-[11px] font-semibold ${
-                p.threat_level === 'CRITICAL THREAT' ? 'bg-red-100 text-red-800 border border-red-200' :
-                p.threat_level === 'ELEVATED RISK' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
-                'bg-emerald-100 text-emerald-800 border border-emerald-200'
-              }">
-                ${p.threat_level}
-              </span>
-            </td>
-          </tr>
-        `).join('');
+        function getThreatBadgeClass(threat) {
+      const base = "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider border";
+      if (threat === 'CRITICAL THREAT') return `${base} bg-rose-50 text-rose-700 border-rose-200`;
+      if (threat === 'ELEVATED RISK') return `${base} bg-amber-50 text-amber-700 border-amber-200`;
+      return `${base} bg-emerald-50 text-emerald-700 border-emerald-200`;
+    }
+
+    const tbody = document.getElementById('projects-table-body');
+    tbody.innerHTML = data.map(p => `
+      <tr class="border-b border-slate-100 transition-colors duration-150 hover:bg-slate-50/80">
+        <td class="py-3 px-4 font-mono font-semibold text-inqaba-navy align-middle">${p.project_id}</td>
+        <td class="py-3 px-4 align-middle">
+          <div class="font-medium text-slate-900 font-interface">${p.project_name}</div>
+          <div class="text-[11px] text-slate-500">${p.sector} • ${p.contractor}</div>
+        </td>
+        <td class="py-3 px-4 align-middle">
+          <span class="inline-block px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
+            ${p.province}
+          </span>
+        </td>
+        <td class="py-3 px-4 font-mono text-[11px] text-slate-700 align-middle">${p.treasury_vote}</td>
+        <td class="py-3 px-4 font-mono text-right font-medium tabular-nums text-slate-900 align-middle">R ${p.budget_zar.toLocaleString('en-ZA')}</td>
+        <td class="py-3 px-4 font-mono text-right tabular-nums text-slate-600 align-middle">R ${p.disbursed_zar.toLocaleString('en-ZA')}</td>
+        <td class="py-3 px-4 text-center align-middle">
+          <span class="${getThreatBadgeClass(p.threat_level)}">
+            ${p.threat_level === 'CRITICAL THREAT' ? 'CRITICAL' : p.threat_level === 'ELEVATED RISK' ? 'ELEVATED' : 'NOMINAL'}
+          </span>
+        </td>
+      </tr>
+    `).join('');
       })
       .catch(err => console.error('Error loading mock data:', err));
   </script>
