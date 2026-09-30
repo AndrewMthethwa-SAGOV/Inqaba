@@ -1,0 +1,34 @@
+[
+  {
+    "incident_id": "INC-2026-0089",
+    "project_id": "INQ-KZN-2026-006",
+    "cas_number": "CAS 184/09/2026",
+    "incident_date": "2026-09-12T08:30:00Z",
+    "incident_type": "Armed Extortion / Business Forum Stoppage",
+    "saps_station": "Point Police Station",
+    "site_stoppage_days": 19,
+    "financial_loss_zar": 3850000.00,
+    "status": "Active Docket / DPCI Priority",
+    "description": "Armed group halted earthworks demanding unvetted 30% procurement subcontracts directly to designated proxy entities.",
+    "coordinates": {
+      "latitude": -29.8650,
+      "longitude": 31.0250
+    }
+  },
+  {
+    "incident_id": "INC-2026-0042",
+    "project_id": "INQ-MP-2026-001",
+    "cas_number": "CAS 92/08/2026",
+    "incident_date": "2026-08-28T02:15:00Z",
+    "incident_type": "Cable Theft & Infrastructure Sabotage",
+    "saps_station": "Witbank SAPS",
+    "site_stoppage_days": 4,
+    "financial_loss_zar": 920000.00,
+    "status": "Under Investigation",
+    "description": "Systematic stripping of medium-voltage copper feeders at substation perimeter during night shift.",
+    "coordinates": {
+      "latitude": -25.8728,
+      "longitude": 29.2314
+    }
+  }
+]

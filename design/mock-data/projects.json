@@ -1,0 +1,122 @@
+[
+  {
+    "project_id": "INQ-KZN-2026-006",
+    "project_name": "Durban Container Terminal Berth Deepening",
+    "sector": "Transport & Logistics",
+    "province": "KwaZulu-Natal",
+    "municipality": "eThekwini Metropolitan Municipality",
+    "treasury_vote": "VOTE-33",
+    "procurement_status": "Active Execution",
+    "budget_zar": 450000000.00,
+    "disbursed_zar": 112500000.00,
+    "execution_percentage": 25.0,
+    "contractor": "Sovereign Maritime Engineering JV",
+    "cidb_grade": "9CE",
+    "coordinates": {
+      "latitude": -29.8650,
+      "longitude": 31.0250
+    },
+    "threat_level": "CRITICAL THREAT",
+    "last_inspection_date": "2026-09-15"
+  },
+  {
+    "project_id": "INQ-MP-2026-001",
+    "project_name": "Highveld Renewable Grid Integration Corridor",
+    "sector": "Energy & Power",
+    "province": "Mpumalanga",
+    "municipality": "eMalahleni Local Municipality",
+    "treasury_vote": "VOTE-14",
+    "procurement_status": "Active Execution",
+    "budget_zar": 280000000.00,
+    "disbursed_zar": 196000000.00,
+    "execution_percentage": 70.0,
+    "contractor": "Vukani Power Infrastructure Ltd",
+    "cidb_grade": "9EP",
+    "coordinates": {
+      "latitude": -25.8728,
+      "longitude": 29.2314
+    },
+    "threat_level": "ELEVATED RISK",
+    "last_inspection_date": "2026-09-18"
+  },
+  {
+    "project_id": "INQ-EC-2026-002",
+    "project_name": "Mzimvubu Water Bulk Supply Scheme",
+    "sector": "Water & Sanitation",
+    "province": "Eastern Cape",
+    "municipality": "OR Tambo District Municipality",
+    "treasury_vote": "VOTE-41",
+    "procurement_status": "Tender Adjudication",
+    "budget_zar": 620000000.00,
+    "disbursed_zar": 31000000.00,
+    "execution_percentage": 5.0,
+    "contractor": "Pending Award",
+    "cidb_grade": "9CE",
+    "coordinates": {
+      "latitude": -31.3125,
+      "longitude": 28.7580
+    },
+    "threat_level": "NOMINAL / SECURE",
+    "last_inspection_date": "2026-08-20"
+  },
+  {
+    "project_id": "INQ-LP-2026-003",
+    "project_name": "Musina-Makhado SEZ Logistics Hub Interchange",
+    "sector": "Transport & Freight",
+    "province": "Limpopo",
+    "municipality": "Musina Local Municipality",
+    "treasury_vote": "VOTE-33",
+    "procurement_status": "Feasibility & Engineering",
+    "budget_zar": 175000000.00,
+    "disbursed_zar": 8750000.00,
+    "execution_percentage": 5.0,
+    "contractor": "Limpopo Strategic Civils",
+    "cidb_grade": "8CE",
+    "coordinates": {
+      "latitude": -22.3486,
+      "longitude": 30.0418
+    },
+    "threat_level": "NOMINAL / SECURE",
+    "last_inspection_date": "2026-07-12"
+  },
+  {
+    "project_id": "INQ-NC-2026-004",
+    "project_name": "Upington Solar Desalination Plant",
+    "sector": "Water & Sanitation",
+    "province": "Northern Cape",
+    "municipality": "Dawid Kruiper Local Municipality",
+    "treasury_vote": "VOTE-41",
+    "procurement_status": "Active Execution",
+    "budget_zar": 95000000.00,
+    "disbursed_zar": 80750000.00,
+    "execution_percentage": 85.0,
+    "contractor": "Kalahari Agro-Water Solutions",
+    "cidb_grade": "7CE",
+    "coordinates": {
+      "latitude": -28.4572,
+      "longitude": 21.2425
+    },
+    "threat_level": "NOMINAL / SECURE",
+    "last_inspection_date": "2026-09-22"
+  },
+  {
+    "project_id": "INQ-FS-2026-005",
+    "project_name": "Harrismith Logistics Gateway Cold Storage",
+    "sector": "Agriculture & Logistics",
+    "province": "Free State",
+    "municipality": "Maluti-a-Phofung Local Municipality",
+    "treasury_vote": "VOTE-39",
+    "procurement_status": "Tender Adjudication",
+    "budget_zar": 130000000.00,
+    "disbursed_zar": 6500000.00,
+    "execution_percentage": 5.0,
+    "contractor": "Highveld Agrico Consortium",
+    "cidb_grade": "8GB",
+    "coordinates": {
+      "latitude": -28.2728,
+      "longitude": 29.1294
+    },
+    "threat_level": "NOMINAL / SECURE",
+    "last_inspection_date": "2026-08-30"
+  }
+]

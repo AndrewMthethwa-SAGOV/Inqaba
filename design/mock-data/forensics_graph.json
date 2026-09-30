@@ -1,0 +1,56 @@
+{
+  "entities": [
+    {
+      "id": "ENT-CON-001",
+      "type": "Contractor",
+      "label": "Sovereign Maritime Engineering JV",
+      "csd_number": "MAAA0039482",
+      "cidb_grade": "9CE",
+      "risk_score": 88
+    },
+    {
+      "id": "ENT-DIR-001",
+      "type": "Director",
+      "label": "K. Dlamini",
+      "id_number": "7804125089081",
+      "persal_conflict": true,
+      "persal_department": "KZN Dept of Transport (Deputy Director: Freight)"
+    },
+    {
+      "id": "ENT-SHL-002",
+      "type": "Subcontractor / Shell Entity",
+      "label": "Isivuno Coastal Logistics Pty",
+      "csd_number": "MAAA0982314",
+      "risk_score": 94,
+      "flag": "Shared Registered Physical Address with Primary Contractor"
+    },
+    {
+      "id": "ENT-PROJ-006",
+      "type": "State Project",
+      "label": "INQ-KZN-2026-006 (Durban Berth Deepening)",
+      "vote": "VOTE-33"
+    }
+  ],
+  "relationships": [
+    {
+      "source": "ENT-DIR-001",
+      "target": "ENT-CON-001",
+      "relation": "Executive Director (35% Shareholding)"
+    },
+    {
+      "source": "ENT-DIR-001",
+      "target": "ENT-SHL-002",
+      "relation": "Beneficial Owner / Direct Signatory"
+    },
+    {
+      "source": "ENT-CON-001",
+      "target": "ENT-PROJ-006",
+      "relation": "Appointed Head Contractor"
+    },
+    {
+      "source": "ENT-SHL-002",
+      "target": "ENT-PROJ-006",
+      "relation": "Enforced 30% Subcontracting Beneficiary"
+    }
+  ]
+}
