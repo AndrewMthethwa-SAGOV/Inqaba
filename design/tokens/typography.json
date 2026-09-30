@@ -1,0 +1,31 @@
+{
+  "fonts": {
+    "interface": {
+      "family": "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+      "usage": "Labels, buttons, tables, standard body text"
+    },
+    "editorial": {
+      "family": "'Merriweather', 'Georgia', serif",
+      "usage": "Institutional headings, charter statements, executive reports"
+    },
+    "monospace": {
+      "family": "'JetBrains Mono', 'Fira Code', monospace",
+      "usage": "ZAR currency, SCOA codes, coordinates, CAS dockets, timestamps"
+    }
+  },
+  "scale": {
+    "display": "2.25rem",
+    "h1": "1.875rem",
+    "h2": "1.5rem",
+    "h3": "1.25rem",
+    "body": "1rem",
+    "caption": "0.875rem",
+    "micro": "0.75rem"
+  },
+  "weights": {
+    "regular": 400,
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700
+  }
+}

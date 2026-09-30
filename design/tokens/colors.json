@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "system": "Inqaba Design System",
+    "version": "1.0.0",
+    "description": "Institutional Sovereign Design Tokens"
+  },
+  "light": {
+    "background": "#F8FAFC",
+    "surface": "#FFFFFF",
+    "surface_subtle": "#F1F5F9",
+    "border": "#E2E8F0",
+    "text_primary": "#0F172A",
+    "text_secondary": "#475569",
+    "text_muted": "#94A3B8",
+    "brand_primary": "#0A192F",
+    "brand_accent": "#C5A059",
+    "brand_interactive": "#1E3A8A"
+  },
+  "dark": {
+    "background": "#070D14",
+    "surface": "#0D1724",
+    "surface_subtle": "#142032",
+    "border": "#1E2D42",
+    "text_primary": "#F1F5F9",
+    "text_secondary": "#94A3B8",
+    "text_muted": "#64748B",
+    "brand_primary": "#0D1D33",
+    "brand_accent": "#D4AF37",
+    "brand_interactive": "#3B82F6"
+  },
+  "status": {
+    "success": {
+      "hex": "#0D9488",
+      "label": "Verified / On Budget / Completed"
+    },
+    "warning": {
+      "hex": "#D97706",
+      "label": "Variance Query / Schedule Delay"
+    },
+    "danger": {
+      "hex": "#DC2626",
+      "label": "Stoppage / Ghost Project / Criminal Docket"
+    },
+    "info": {
+      "hex": "#0284C7",
+      "label": "Notice / Planning / Feasibility"
+    }
+  }
+}

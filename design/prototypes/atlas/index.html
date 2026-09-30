@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inqaba ATLAS — Operational Infrastructure & GIS Portal</title>
+  <link rel="stylesheet" href="../../style.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    /* Custom Map Marker Styling to match QGIS Symbology */
+    .pin-critical {
+      background-color: #DC2626;
+      border: 2px solid #FFFFFF;
+      border-radius: 9999px;
+      box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.4), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .pin-elevated {
+      background-color: #D97706;
+      border: 2px solid #FFFFFF;
+      border-radius: 9999px;
+      box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.3), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .pin-nominal {
+      background-color: #0D9488;
+      border: 2px solid #FFFFFF;
+      border-radius: 9999px;
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.3), 0 2px 4px rgba(0,0,0,0.2);
+    }
+    /* Smooth Leaflet Tooltip */
+    .leaflet-popup-content-wrapper {
+      border-radius: 8px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      padding: 0;
+      overflow: hidden;
+    }
+    .leaflet-popup-content {
+      margin: 0;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body class="bg-inqaba-bg min-h-screen text-slate-900 antialiased flex flex-col font-interface">
+
+  <!-- Top Executive Bar -->
+  <header class="bg-inqaba-navy text-white border-b border-inqaba-gold/30 px-6 py-3 flex items-center justify-between shadow-md">
+    <div class="flex items-center space-x-4">
+      <a href="../../index.html" class="flex items-center space-x-3 group">
+        <div class="h-8 w-8 rounded bg-inqaba-gold flex items-center justify-center text-inqaba-navy font-bold text-sm tracking-wider">
+          IN
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="font-editorial text-base font-bold tracking-wide">INQABA ATLAS</span>
+            <span class="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-slate-800 text-inqaba-gold border border-inqaba-gold/30">Operations & GIS</span>
+          </div>
+          <p class="text-[11px] text-slate-300 font-mono tracking-wider">Sovereign Spatial Infrastructure Ledger</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center space-x-3 text-xs font-mono">
+      <span class="hidden sm:inline-flex items-center px-2.5 py-1 rounded bg-slate-800/80 text-slate-300 border border-slate-700">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 mr-2"></span>
+        GIS ENGINE: EPSG:4326 (WGS 84)
+      </span>
+      <a href="../../index.html" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 transition">
+        ← Return to Hub
+      </a>
+    </div>
+  </header>
+
+  <!-- Dynamic Summary KPI Bar -->
+  <section class="bg-white border-b border-inqaba-border px-6 py-3">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div>
+        <span class="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Filtered Capital Pool</span>
+        <p id="kpi-budget" class="text-lg font-bold font-mono text-inqaba-navy mt-0.5">R 0.00</p>
+      </div>
+      <div>
+        <span class="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Certified Disbursements</span>
+        <p id="kpi-disbursed" class="text-lg font-bold font-mono text-slate-700 mt-0.5">R 0.00</p>
+      </div>
+      <div>
+        <span class="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Active Infrastructure Sites</span>
+        <p id="kpi-count" class="text-lg font-bold font-mono text-slate-800 mt-0.5">0 Projects</p>
+      </div>
+      <div>
+        <span class="text-[11px] uppercase tracking-wider text-red-600 font-medium">Critical Threat Interventions</span>
+        <p id="kpi-threat" class="text-lg font-bold font-mono text-red-600 mt-0.5">0 Active</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter & Search Control Panel -->
+  <section class="bg-slate-50 border-b border-inqaba-border px-6 py-3">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
+      
+      <!-- Search Input -->
+      <div class="relative flex-1 max-w-md">
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Filter by Project Name, ID, or Contractor..." 
+          class="w-full pl-8 pr-3 py-2 bg-white border border-slate-300 rounded-md focus:outline-none focus:ring-1 focus:ring-inqaba-navy focus:border-inqaba-navy text-slate-800 placeholder-slate-400 font-interface"
+        />
+        <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+
+      <!-- Dropdown Selectors -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Province -->
+        <select id="filter-province" class="bg-white border border-slate-300 rounded-md px-2.5 py-1.5 text-slate-700 focus:outline-none focus:border-inqaba-navy font-interface">
+          <option value="ALL">All 9 Provinces</option>
+          <option value="Eastern Cape">Eastern Cape</option>
+          <option value="Free State">Free State</option>
+          <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+          <option value="Limpopo">Limpopo</option>
+          <option value="Mpumalanga">Mpumalanga</option>
+          <option value="Northern Cape">Northern Cape</option>
+        </select>
+
+        <!-- Sector -->
+        <select id="filter-sector" class="bg-white border border-slate-300 rounded-md px-2.5 py-1.5 text-slate-700 focus:outline-none focus:border-inqaba-navy font-interface">
+          <option value="ALL">All Sectors</option>
+          <option value="Transport & Logistics">Transport & Logistics</option>
+          <option value="Transport & Freight">Transport & Freight</option>
+          <option value="Energy & Power">Energy & Power</option>
+          <option value="Water & Sanitation">Water & Sanitation</option>
+          <option value="Agriculture & Logistics">Agriculture & Logistics</option>
+        </select>
+
+        <!-- Threat Level -->
+        <select id="filter-threat" class="bg-white border border-slate-300 rounded-md px-2.5 py-1.5 text-slate-700 focus:outline-none focus:border-inqaba-navy font-interface">
+          <option value="ALL">All Threat Tiers</option>
+          <option value="CRITICAL THREAT">Critical Threat</option>
+          <option value="ELEVATED RISK">Elevated Risk</option>
+          <option value="NOMINAL / SECURE">Nominal / Secure</option>
+        </select>
+
+        <button id="reset-filters" class="px-3 py-1.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium transition">
+          Reset
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Main Split Canvas: Map (Top/Left) + Ledger (Bottom/Right) -->
+  <main class="flex-1 max-w-7xl mx-auto w-full p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Interactive Spatial Map Frame (5 Columns on Desktop) -->
+    <div class="lg:col-span-5 bg-white rounded-lg border border-inqaba-border shadow-sm flex flex-col overflow-hidden h-[420px] lg:h-[680px]">
+      <div class="px-4 py-3 bg-slate-50 border-b border-inqaba-border flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="h-2.5 w-2.5 rounded-full bg-inqaba-gold"></span>
+          <h2 class="font-editorial text-sm font-bold text-inqaba-navy">Territorial Spatial Visualizer</h2>
+        </div>
+        <span id="map-counter" class="text-[11px] font-mono text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded">
+          6 Markers Plotted
+        </span>
+      </div>
+      
+      <!-- The Map Container -->
+      <div id="atlas-map" class="flex-1 w-full bg-slate-100 z-0"></div>
+
+      <!-- Map Legend -->
+      <div class="px-4 py-2.5 bg-slate-50 border-t border-inqaba-border flex items-center justify-between text-[11px] text-slate-600">
+        <div class="flex items-center space-x-1.5">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-600"></span>
+          <span>Critical Threat</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+          <span>Elevated Risk</span>
+        </div>
+        <div class="flex items-center space-x-1.5">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+          <span>Nominal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Capital Project Register (7 Columns on Desktop) -->
+    <div class="lg:col-span-7 bg-white rounded-lg border border-inqaba-border shadow-sm flex flex-col overflow-hidden h-[500px] lg:h-[680px]">
+      <div class="px-4 py-3 bg-slate-50 border-b border-inqaba-border flex items-center justify-between">
+        <div>
+          <h2 class="font-editorial text-sm font-bold text-inqaba-navy">Infrastructure Asset Register</h2>
+          <p class="text-[11px] text-slate-500">Click any project to center and inspect on map</p>
+        </div>
+        <span class="text-[11px] font-mono text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded">
+          PFMA Audit Synchronized
+        </span>
+      </div>
+
+      <!-- Scrollable Table -->
+      <div class="flex-1 overflow-y-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead class="sticky top-0 bg-slate-100/95 border-b border-inqaba-border text-[11px] uppercase tracking-wider text-slate-600 font-interface shadow-sm">
+            <tr>
+              <th class="py-2.5 px-3">Project Details</th>
+              <th class="py-2.5 px-3">Vote</th>
+              <th class="py-2.5 px-3 text-right">Budget (ZAR)</th>
+              <th class="py-2.5 px-3 text-right">Progress</th>
+              <th class="py-2.5 px-3 text-center">Threat</th>
+            </tr>
+          </thead>
+          <tbody id="projects-table-body" class="divide-y divide-slate-200 font-interface">
+            <!-- Populated via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="px-4 py-2 bg-slate-50 border-t border-inqaba-border text-[11px] text-slate-500 flex justify-between items-center font-mono">
+        <span id="filtered-records-text">Showing 6 of 6 projects</span>
+        <span>Source: ~/inqaba/design/mock-data/projects.json</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let allProjects = [];
+    let activeMarkers = [];
+    let map;
+
+    // Initialize Leaflet Map Centered over South Africa
+    function initMap() {
+      map = L.map('atlas-map', {
+        zoomControl: true,
+        scrollWheelZoom: false
+      }).setView([-28.8, 25.5], 5);
+
+      // Clean, muted institutional basemap
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; OpenStreetMap',
+        maxZoom: 18
+      }).addTo(map);
+    }
+
+    // Determine custom pin class based on threat level
+    function getPinClass(threat) {
+      if (threat === 'CRITICAL THREAT') return 'pin-critical';
+      if (threat === 'ELEVATED RISK') return 'pin-elevated';
+      return 'pin-nominal';
+    }
+
+    // Render Markers on Map
+    function renderMapMarkers(projects) {
+      // Clear existing markers
+      activeMarkers.forEach(m => map.removeLayer(m));
+      activeMarkers = [];
+
+      projects.forEach(p => {
+        const pinClass = getPinClass(p.threat_level);
+        const customIcon = L.divIcon({
+          className: 'custom-pin',
+          html: `<div class="${pinClass} w-3.5 h-3.5"></div>`,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7]
+        });
+
+        const marker = L.marker([p.coordinates.latitude, p.coordinates.longitude], { icon: customIcon })
+          .addTo(map);
+
+        const popupContent = `
+          <div class="p-3 font-interface text-slate-800 text-xs min-w-[220px]">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-mono text-[10px] font-semibold text-slate-500">${p.project_id}</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                p.threat_level === 'CRITICAL THREAT' ? 'bg-red-100 text-red-800' :
+                p.threat_level === 'ELEVATED RISK' ? 'bg-amber-100 text-amber-800' :
+                'bg-teal-100 text-teal-800'
+              }">${p.threat_level}</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-xs leading-snug mb-1">${p.project_name}</h4>
+            <div class="text-[11px] text-slate-600 space-y-0.5 mb-2">
+              <p><strong class="text-slate-700">Sector:</strong> ${p.sector}</p>
+              <p><strong class="text-slate-700">Contractor:</strong> ${p.contractor} (${p.cidb_grade})</p>
+              <p><strong class="text-slate-700">Jurisdiction:</strong> ${p.province}</p>
+            </div>
+            <div class="pt-2 border-t border-slate-200 flex justify-between font-mono text-[11px]">
+              <div>
+                <span class="text-slate-400 block text-[9px] uppercase">Budget</span>
+                <span class="font-semibold text-slate-800">R ${(p.budget_zar / 1e6).toFixed(1)}M</span>
+              </div>
+              <div class="text-right">
+                <span class="text-slate-400 block text-[9px] uppercase">Progress</span>
+                <span class="font-semibold text-emerald-700">${p.execution_percentage}%</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        marker.projectId = p.project_id;
+        activeMarkers.push(marker);
+      });
+
+      document.getElementById('map-counter').innerText = `${projects.length} Markers Plotted`;
+    }
+
+    // Render Table Rows
+    function renderTable(projects) {
+      const tbody = document.getElementById('projects-table-body');
+      if (projects.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-8 text-center text-slate-400">
+              No infrastructure assets match the active filter criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = projects.map(p => `
+        <tr id="row-${p.project_id}" class="hover:bg-slate-50 cursor-pointer transition border-b border-slate-100" onclick="focusProject('${p.project_id}')">
+          <td class="py-2.5 px-3">
+            <div class="flex items-center space-x-1.5">
+              <span class="font-mono font-semibold text-inqaba-navy text-[11px]">${p.project_id}</span>
+              <span class="text-[10px] text-slate-400">•</span>
+              <span class="text-[11px] text-slate-600 font-medium">${p.province}</span>
+            </div>
+            <div class="font-medium text-slate-900 text-xs mt-0.5 line-clamp-1">${p.project_name}</div>
+            <div class="text-[10px] text-slate-500">${p.sector} | ${p.contractor}</div>
+          </td>
+          <td class="py-2.5 px-3 font-mono text-[11px] text-slate-700">${p.treasury_vote}</td>
+          <td class="py-2.5 px-3 font-mono text-right font-medium text-slate-900">
+            R ${p.budget_zar.toLocaleString('en-ZA')}
+          </td>
+          <td class="py-2.5 px-3 text-right">
+            <div class="font-mono text-[11px] font-semibold text-slate-700">${p.execution_percentage}%</div>
+            <div class="w-16 bg-slate-200 h-1.5 rounded-full mt-1 ml-auto overflow-hidden">
+              <div class="bg-emerald-600 h-1.5 rounded-full" style="width: ${p.execution_percentage}%"></div>
+            </div>
+          </td>
+          <td class="py-2.5 px-3 text-center">
+            <span class="inline-flex px-1.5 py-0.5 rounded text-[9px] font-bold ${
+              p.threat_level === 'CRITICAL THREAT' ? 'bg-red-100 text-red-800 border border-red-200' :
+              p.threat_level === 'ELEVATED RISK' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+              'bg-teal-100 text-teal-800 border border-teal-200'
+            }">
+              ${p.threat_level === 'CRITICAL THREAT' ? 'CRITICAL' : p.threat_level === 'ELEVATED RISK' ? 'ELEVATED' : 'NOMINAL'}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+
+      document.getElementById('filtered-records-text').innerText = `Showing ${projects.length} of ${allProjects.length} projects`;
+    }
+
+    // Update Top Summary KPI Cards
+    function updateKPIs(projects) {
+      const totalBudget = projects.reduce((sum, p) => sum + p.budget_zar, 0);
+      const totalDisbursed = projects.reduce((sum, p) => sum + p.disbursed_zar, 0);
+      const criticalCount = projects.filter(p => p.threat_level === 'CRITICAL THREAT').length;
+
+      document.getElementById('kpi-budget').innerText = `R ${totalBudget.toLocaleString('en-ZA')}`;
+      document.getElementById('kpi-disbursed').innerText = `R ${totalDisbursed.toLocaleString('en-ZA')}`;
+      document.getElementById('kpi-count').innerText = `${projects.length} Projects`;
+      document.getElementById('kpi-threat').innerText = `${criticalCount} Active`;
+    }
+
+    // Center and Zoom Map on Selected Project
+    window.focusProject = function(projectId) {
+      const project = allProjects.find(p => p.project_id === projectId);
+      if (!project) return;
+
+      // Pan map
+      map.flyTo([project.coordinates.latitude, project.coordinates.longitude], 10, {
+        duration: 1.2
+      });
+
+      // Open Popup
+      const targetMarker = activeMarkers.find(m => m.projectId === projectId);
+      if (targetMarker) {
+        targetMarker.openPopup();
+      }
+
+      // Highlight Table Row
+      document.querySelectorAll('#projects-table-body tr').forEach(r => r.classList.remove('bg-amber-50', 'border-amber-300'));
+      const activeRow = document.getElementById(`row-${projectId}`);
+      if (activeRow) {
+        activeRow.classList.add('bg-amber-50', 'border-amber-300');
+      }
+    };
+
+    // Filter Logic
+    function applyFilters() {
+      const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+      const province = document.getElementById('filter-province').value;
+      const sector = document.getElementById('filter-sector').value;
+      const threat = document.getElementById('filter-threat').value;
+
+      const filtered = allProjects.filter(p => {
+        const matchesSearch = !searchTerm || 
+          p.project_name.toLowerCase().includes(searchTerm) ||
+          p.project_id.toLowerCase().includes(searchTerm) ||
+          p.contractor.toLowerCase().includes(searchTerm);
+
+        const matchesProvince = (province === 'ALL') || (p.province === province);
+        const matchesSector = (sector === 'ALL') || (p.sector === sector);
+        const matchesThreat = (threat === 'ALL') || (p.threat_level === threat);
+
+        return matchesSearch && matchesProvince && matchesSector && matchesThreat;
+      });
+
+      renderTable(filtered);
+      renderMapMarkers(filtered);
+      updateKPIs(filtered);
+    }
+
+    // Attach Event Listeners
+    document.getElementById('search-input').addEventListener('input', applyFilters);
+    document.getElementById('filter-province').addEventListener('change', applyFilters);
+    document.getElementById('filter-sector').addEventListener('change', applyFilters);
+    document.getElementById('filter-threat').addEventListener('change', applyFilters);
+
+    document.getElementById('reset-filters').addEventListener('click', () => {
+      document.getElementById('search-input').value = '';
+      document.getElementById('filter-province').value = 'ALL';
+      document.getElementById('filter-sector').value = 'ALL';
+      document.getElementById('filter-threat').value = 'ALL';
+      applyFilters();
+      map.setView([-28.8, 25.5], 5);
+    });
+
+    // Initial Ingestion of Mock Data
+    initMap();
+    fetch('../../mock-data/projects.json')
+      .then(res => res.json())
+      .then(data => {
+        allProjects = data;
+        renderTable(allProjects);
+        renderMapMarkers(allProjects);
+        updateKPIs(allProjects);
+      })
+      .catch(err => console.error('Failed to load projects.json:', err));
+  </script>
+</body>
+</html>
