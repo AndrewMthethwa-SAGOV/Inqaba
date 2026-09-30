@@ -96,7 +96,7 @@
   </section>
 
   <!-- Filter & Search Control Panel -->
-  <section class="bg-slate-50 border-b border-inqaba-border px-6 py-3">
+  <section class="iq-glass-light border-b border-slate-200/80 px-6 py-3 shadow-sm">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-3 text-xs">
       
       <!-- Search Input -->
@@ -170,7 +170,7 @@
       <div id="atlas-map" class="flex-1 w-full bg-slate-100 z-0"></div>
 
       <!-- Map Legend -->
-      <div class="px-4 py-2.5 bg-slate-50 border-t border-inqaba-border flex items-center justify-between text-[11px] text-slate-600">
+      <div class="px-4 py-2.5 iq-glass-light border-t border-slate-200/80 font-mono tracking-wider flex items-center justify-between text-[11px] text-slate-600">
         <div class="flex items-center space-x-1.5">
           <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-600"></span>
           <span>Critical Threat</span>
@@ -199,7 +199,7 @@
       </div>
 
       <!-- Scrollable Table -->
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 overflow-y-auto scrollbar-thin">
         <table class="w-full text-left border-collapse text-xs">
           <thead class="sticky top-0 bg-slate-100/95 border-b border-inqaba-border text-[11px] uppercase tracking-wider text-slate-600 font-interface shadow-sm">
             <tr>
@@ -320,33 +320,36 @@
         return;
       }
 
-      tbody.innerHTML = projects.map(p => `
-        <tr id="row-${p.project_id}" class="hover:bg-slate-50 cursor-pointer transition border-b border-slate-100" onclick="focusProject('${p.project_id}')">
-          <td class="py-2.5 px-3">
+          function getThreatBadgeClass(threat) {
+      const base = "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider border";
+      if (threat === 'CRITICAL THREAT') return `${base} bg-rose-50 text-rose-700 border-rose-200`;
+      if (threat === 'ELEVATED RISK') return `${base} bg-amber-50 text-amber-700 border-amber-200`;
+      return `${base} bg-emerald-50 text-emerald-700 border-emerald-200`;
+    }
+
+    tbody.innerHTML = projects.map(p => `
+        <tr id="row-${p.project_id}" class="border-b border-slate-100 transition-colors duration-150 hover:bg-slate-50/80 cursor-pointer" onclick="focusProject('${p.project_id}')">
+          <td class="py-2.5 px-3 align-middle">
             <div class="flex items-center space-x-1.5">
-              <span class="font-mono font-semibold text-inqaba-navy text-[11px]">${p.project_id}</span>
+              <span class="font-mono text-xs font-semibold text-inqaba-navy">${p.project_id}</span>
               <span class="text-[10px] text-slate-400">•</span>
               <span class="text-[11px] text-slate-600 font-medium">${p.province}</span>
             </div>
             <div class="font-medium text-slate-900 text-xs mt-0.5 line-clamp-1">${p.project_name}</div>
-            <div class="text-[10px] text-slate-500">${p.sector} | ${p.contractor}</div>
+            <div class="text-[10px] text-slate-500 font-interface">${p.sector} | ${p.contractor}</div>
           </td>
-          <td class="py-2.5 px-3 font-mono text-[11px] text-slate-700">${p.treasury_vote}</td>
-          <td class="py-2.5 px-3 font-mono text-right font-medium text-slate-900">
+          <td class="py-2.5 px-3 font-mono text-[11px] text-slate-700 align-middle">${p.treasury_vote}</td>
+          <td class="py-2.5 px-3 font-mono font-medium text-right tabular-nums text-slate-900 align-middle">
             R ${p.budget_zar.toLocaleString('en-ZA')}
           </td>
-          <td class="py-2.5 px-3 text-right">
-            <div class="font-mono text-[11px] font-semibold text-slate-700">${p.execution_percentage}%</div>
+          <td class="py-2.5 px-3 text-right align-middle">
+            <div class="font-mono text-[11px] font-semibold text-slate-700 tabular-nums">${p.execution_percentage}%</div>
             <div class="w-16 bg-slate-200 h-1.5 rounded-full mt-1 ml-auto overflow-hidden">
               <div class="bg-emerald-600 h-1.5 rounded-full" style="width: ${p.execution_percentage}%"></div>
             </div>
           </td>
-          <td class="py-2.5 px-3 text-center">
-            <span class="inline-flex px-1.5 py-0.5 rounded text-[9px] font-bold ${
-              p.threat_level === 'CRITICAL THREAT' ? 'bg-red-100 text-red-800 border border-red-200' :
-              p.threat_level === 'ELEVATED RISK' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
-              'bg-teal-100 text-teal-800 border border-teal-200'
-            }">
+          <td class="py-2.5 px-3 text-center align-middle">
+            <span class="${getThreatBadgeClass(p.threat_level)}">
               ${p.threat_level === 'CRITICAL THREAT' ? 'CRITICAL' : p.threat_level === 'ELEVATED RISK' ? 'ELEVATED' : 'NOMINAL'}
             </span>
           </td>
